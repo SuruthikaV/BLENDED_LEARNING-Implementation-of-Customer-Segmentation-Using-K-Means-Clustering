@@ -9,22 +9,66 @@ To implement customer segmentation using K-Means clustering on the Mall Customer
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1. 
-2. 
-3. 
-4. 
+1.  Load and Prepare Data
+2.  Determine Optimal Number of Clusters
+3.  Apply K-Means Clustering
+4.  Evaluate and Visualize Clusters  
 
 ## Program:
 ```
 /*
 Program to implement customer segmentation using K-Means clustering on the Mall Customers dataset.
-Developed by: 
-RegisterNumber:  
+Developed by: V SURUTHIKA
+RegisterNumber:  212225040441
 */
+```
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score
+data = pd.read_csv('CustomerData.csv')
+print(data.head())
+print(data.columns)
+features = ['Age', 'Annual Income (k$)', 'Spending Score (1-100)']
+X = data[features]
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+wcss = []
+
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, random_state=42)
+    kmeans.fit(X_scaled)
+    wcss.append(kmeans.inertia_)
+plt.figure(figsize=(8,4))
+plt.plot(range(1, 11), wcss, marker='o', linestyle='-')
+plt.xlabel('Number of Clusters')
+plt.ylabel('WCSS')
+plt.title('Elbow Method for Optimal Number of Clusters')
+plt.show()
+optimal_clusters = 4
+kmeans = KMeans(n_clusters=optimal_clusters, random_state=42)
+kmeans.fit(X_scaled)
+data['Cluster'] = kmeans.labels_
+sil_score = silhouette_score(X_scaled, kmeans.labels_)
+print(f'Silhouette Score: {sil_score}')
+plt.figure(figsize=(10,5))
+sns.scatterplot(data=data, x='Annual Income (k$)', y='Spending Score (1-100)', hue='Cluster', palette='viridis', s=100, alpha=0.7)
+
+plt.title('Customer Segmentation based on Annual Income and Spending Score')
+plt.xlabel('Annual Income (k$)')
+plt.ylabel('Spending Score (1-100)')
+plt.legend(title='Cluster')
+plt.show()
 ```
 
 ## Output:
-![simple linear regression model for predicting the marks scored](sam.png)
+<img width="1028" height="519" alt="image" src="https://github.com/user-attachments/assets/acde7f9d-b14f-4ff9-9c2a-c3e8d44d835d" />
+<img width="516" height="88" alt="image" src="https://github.com/user-attachments/assets/26e34bb8-0be5-491e-9079-9c524c35cd81" />
+<img width="409" height="44" alt="image" src="https://github.com/user-attachments/assets/b89b460e-dd38-4374-8198-04bdb895ddc0" />
+<img width="1154" height="604" alt="image" src="https://github.com/user-attachments/assets/50bd6c5f-3b39-4f07-b004-ce348feef709" />
 
 
 ## Result:
